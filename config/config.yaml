@@ -1,0 +1,9 @@
+env: "local"
+db_url: "postgres://postgres:postgres@postgres_container:5432/postgres?sslmode=disable"
+grpc:
+  port: 44044
+  timeout: 5s
+kafka:
+  address: "kafka:9092"
+  topic: "device-data"
+  group_id: "group-1"
