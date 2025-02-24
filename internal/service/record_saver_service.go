@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/db_service/internal/models"
@@ -17,7 +18,7 @@ func NewRecordSaverService(db *storage.Storage) *RecordSaverService {
 	}
 }
 
-func (r *RecordSaverService) CreateRecord(key []byte, value []byte) (int, error) {
+func (r *RecordSaverService) CreateRecord(ctx context.Context, key []byte, value []byte) (int, error) {
 	var record models.Record
 
 	err := json.Unmarshal(value, &record)
@@ -25,5 +26,5 @@ func (r *RecordSaverService) CreateRecord(key []byte, value []byte) (int, error)
 		return 0, err
 	}
 
-	return r.db.Record.CreateRecord(record)
+	return r.db.Record.CreateRecord(ctx, record)
 }

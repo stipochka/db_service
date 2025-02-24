@@ -60,7 +60,7 @@ func (k *KafkaMessageConsumer) Consume(ctx context.Context) error {
 				continue
 			}
 
-			id, err := k.kafkaService.CreateRecord(msg.Key, msg.Value)
+			id, err := k.kafkaService.CreateRecord(context.Background(), msg.Key, msg.Value)
 			if err != nil {
 				log.Error("failed to create record", slog.String("error", err.Error()))
 				continue

@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/db_service/internal/app"
 	"github.com/db_service/internal/config"
 	"github.com/db_service/internal/consumer"
 	"github.com/db_service/internal/service"
@@ -47,6 +48,12 @@ func main() {
 	log.Info("Created kafka consumer")
 
 	ctx, cancel := context.WithCancel(context.Background())
+
+	application := app.New(conn, log, cfg.GRPC.Port)
+
+	go func() {
+		application.GRPCServer.MustRun()
+	}()
 	go func() {
 		messageConsumer.Consumer.Consume(ctx)
 	}()
@@ -57,7 +64,6 @@ func main() {
 
 	cancel()
 
-	//TODO: create gRPC-server
 }
 
 func setupLogger(env string) *slog.Logger {

@@ -1,12 +1,18 @@
-FROM golang:1.23.6 AS builder
-
+# syntax=docker/dockerfile:1.4
+FROM golang:1.24.0 AS builder
+#export DOCKER_BUILDKIT=1
 
 WORKDIR /app
 
+ENV GOPRIVATE=github.com/stipochka/*
+
 COPY go.mod go.sum ./
 
-RUN go mod download && go mod verify
-
+RUN --mount=type=ssh \
+    mkdir -p /root/.ssh \
+    && ssh-keyscan github.com >> /root/.ssh/known_hosts \
+    && git config --global url."git@github.com:".insteadOf "https://github.com" \
+    && go mod download && go mod verify
 COPY . .
 
 WORKDIR /app/cmd/db_service
