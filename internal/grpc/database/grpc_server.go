@@ -2,7 +2,6 @@ package dbgrpc
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/db_service/internal/models"
 	"github.com/db_service/internal/service"
@@ -29,9 +28,9 @@ func (s *ServerAPI) GetRecordByID(ctx context.Context, req *database.GetByIdRequ
 		return nil, status.Error(codes.InvalidArgument, "ID is incorrect")
 	}
 
-	record, err := s.storageService.GetRecord(ctx, int(req.GetRecordID()))
+	record, err := s.storageService.GetRecordByID(ctx, int(req.GetRecordID()))
 	if err != nil {
-		return nil, status.Error(codes.NotFound, fmt.Sprintf("failed to find record with id %d", req.GetRecordID()))
+		return nil, status.Error(codes.NotFound, "failed to find record")
 	}
 
 	return RecordToRecordResponse(record), nil
@@ -41,9 +40,9 @@ func (s *ServerAPI) GetRecordByID(ctx context.Context, req *database.GetByIdRequ
 func (s *ServerAPI) GetAllRecords(ctx context.Context, req *database.GetAllRecordsRequest) (*database.RecordsResponse, error) {
 	recordsResponse := make([]*database.RecordResponse, 0)
 
-	records, err := s.storageService.GetRecords(ctx)
+	records, err := s.storageService.GetAllRecords(ctx)
 	if err != nil {
-		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get all records %s", err.Error()))
+		return nil, status.Error(codes.Internal, "failed to get all records")
 	}
 
 	for _, record := range records {

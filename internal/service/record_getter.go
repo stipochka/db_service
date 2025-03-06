@@ -20,10 +20,10 @@ func NewRecordGetterService(db *storage.Storage) *RecordGetterService {
 	}
 }
 
-func (r *RecordGetterService) GetRecord(ctx context.Context, id int) (models.Record, error) {
+func (r *RecordGetterService) GetRecordByID(ctx context.Context, id int) (models.Record, error) {
 	return r.db.GetRecordByID(ctx, id)
 }
 
-func (r *RecordGetterService) GetRecords(ctx context.Context) ([]models.Record, error) {
+func (r *RecordGetterService) GetAllRecords(ctx context.Context) ([]models.Record, error) {
 	return r.db.GetAllRecords(ctx)
 }
