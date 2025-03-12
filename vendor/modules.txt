@@ -59,7 +59,7 @@ github.com/pmezard/go-difflib/difflib
 # github.com/spf13/pflag v1.0.6
 ## explicit; go 1.12
 github.com/spf13/pflag
-# github.com/stipochka/protos v0.0.0-20250217150740-6086ce0d43f0
+# github.com/stipochka/protos v0.0.0-20250311133842-425a7134ee49
 ## explicit; go 1.24.0
 github.com/stipochka/protos/gen/go/db
 # github.com/stretchr/objx v0.5.2

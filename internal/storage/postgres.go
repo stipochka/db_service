@@ -18,7 +18,27 @@ func NewPostgresConn(dbUrl string) (*pgxpool.Pool, error) {
 		return nil, err
 	}
 
-	rows, err := conn.Query(context.Background(), "CREATE TABLE mcu_data (id INT NOT NULL, data VARCHAR(1000) DEFAULT NULL);")
-	rows.Close()
+	_, err = conn.Exec(context.Background(), `
+		CREATE TABLE records (
+			id SERIAL PRIMARY KEY,
+			mcu_id INT NOT NULL,
+			status VARCHAR(10) NOT NULL CHECK (status IN ('ON', 'OFF')),
+			polling_period INT NOT NULL,
+			temperature INT NOT NULL, -- Храним в целых числах, реальное значение = temperature / 100
+			lamp_status VARCHAR(10) NOT NULL CHECK (lamp_status IN ('ON', 'OFF')),
+			voltage INT NOT NULL, -- Храним в целых числах, реальное значение = voltage / 100
+			created_at TIMESTAMP DEFAULT NOW(), -- Автоматическое время создания
+			UNIQUE (mcu_id, created_at) -- Гарантирует уникальные записи по времени для каждого MCU
+		);
+		CREATE INDEX idx_records_mcu_created ON records (mcu_id, created_at DESC);
+
+		CREATE TABLE thresholds (
+			id SERIAL PRIMARY KEY,
+			record_id INT REFERENCES records(id) ON DELETE CASCADE,
+			type VARCHAR(20) NOT NULL CHECK (type IN ('temperature', 'humidity', 'voltage')), -- Тип порога
+			value INT NOT NULL, -- Храним в целых числах, реальное значение = value / 100
+			polling_period INT NOT NULL
+		);
+	`)
 	return conn, err
 }

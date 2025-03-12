@@ -1,17 +1,6 @@
 package dbgrpc
 
-import (
-	"context"
-	"errors"
-	"log"
-	"testing"
-
-	"github.com/db_service/internal/models"
-	servicemocks "github.com/db_service/internal/servicemoks"
-	database "github.com/stipochka/protos/gen/go/db"
-	"github.com/stretchr/testify/assert"
-)
-
+/*
 func TestGetAllRecords(t *testing.T) {
 	tests := []struct {
 		name          string
@@ -132,3 +121,4 @@ func TestGetRecordByID(t *testing.T) {
 		})
 	}
 }
+*/

@@ -8,7 +8,7 @@ require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jackc/pgx/v4 v4.18.3
 	github.com/spf13/pflag v1.0.6
-	github.com/stipochka/protos v0.0.0-20250217150740-6086ce0d43f0
+	github.com/stipochka/protos v0.0.0-20250311133842-425a7134ee49
 	github.com/stretchr/testify v1.10.0
 	google.golang.org/grpc v1.70.0
 )

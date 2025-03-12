@@ -2,6 +2,7 @@ package dbgrpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/db_service/internal/models"
 	"github.com/db_service/internal/service"
@@ -41,7 +42,9 @@ func (s *ServerAPI) GetAllRecords(ctx context.Context, req *database.GetAllRecor
 	recordsResponse := make([]*database.RecordResponse, 0)
 
 	records, err := s.storageService.GetAllRecords(ctx)
+
 	if err != nil {
+		fmt.Println("error", err.Error())
 		return nil, status.Error(codes.Internal, "failed to get all records")
 	}
 
@@ -49,12 +52,34 @@ func (s *ServerAPI) GetAllRecords(ctx context.Context, req *database.GetAllRecor
 		recordsResponse = append(recordsResponse, RecordToRecordResponse(record))
 	}
 
-	return &database.RecordsResponse{Record: recordsResponse}, nil
+	return &database.RecordsResponse{Records: recordsResponse}, nil
 }
 
 func RecordToRecordResponse(record models.Record) *database.RecordResponse {
 	return &database.RecordResponse{
-		Id:   int64(record.ID),
-		Data: record.Data,
+		Id:            int32(record.ID),
+		Status:        record.Status,
+		PollingPeriod: int32(record.PollingPeriod),
+		Temperature:   int32(record.Temperature),
+		LampStatus:    record.LampStatus,
+		Voltage:       int32(record.Voltage),
+		Thresholds: &database.Thresholds{
+			Temperature: SensorDataToSensorDataResponse(record.Thresholds.Temperature),
+			Humidity:    SensorDataToSensorDataResponse(record.Thresholds.Humidity),
+			Voltage:     SensorDataToSensorDataResponse(record.Thresholds.Voltage),
+		},
 	}
+}
+
+func SensorDataToSensorDataResponse(records []models.SensorData) []*database.SensorData {
+	sensorDataResponse := make([]*database.SensorData, 0)
+
+	for _, record := range records {
+		sensorDataResponse = append(sensorDataResponse, &database.SensorData{
+			Value:         int32(record.Value),
+			PollingPeriod: int32(record.PollingPeriod),
+		})
+	}
+
+	return sensorDataResponse
 }
